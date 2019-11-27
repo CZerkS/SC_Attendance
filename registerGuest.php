@@ -17,11 +17,12 @@ and open the template in the editor.
         <script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha384-nvAa0+6Qg9clwYCGGPpDQLVpLNn0fRaROjHqs13t4Ggj3Ez50XnGQqc/r8MhnRDZ" crossorigin="anonymous"></script>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd" crossorigin="anonymous"></script>
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
-    </head>
+		<script src="js/jq.js"></script>
+	</head>
     <body style="font-family:Comic Sans MS">
         <div class="container">
             <div class="col-sm-1">
-                <a href="events.php" class="btn btn_primary"  style="margin-top:1rem; background-color:#5E016D; color: #ffffff">Go Back</a>
+                <a href="index.php" class="btn btn_primary"  style="margin-top:1rem; background-color:#5E016D; color: #ffffff">Go Back</a>
             </div>
         </div>
 
@@ -36,53 +37,85 @@ and open the template in the editor.
 
         <div class="container" style="margin-top: 2rem">
             <div class="jumbotron">
-                <div class="row">
-                    <form action="registerGuest.php" method="GET">
-                        <div class="form-group">
-                            <input type="hidden" class="form-control" name="use" value="<?php echo $currEventId ?>" >
-                            <h3 for="code">Registration for <?php echo $currEvent['name']?> Guest</h3>
-                            <form>
-                                <div class="row">
-                                    <div class="col-sm-2">
-                                        <label for="gfullname">Full Name</label>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-sm-6">
-                                        <input type="text" class="form-control" placeholder="First name" name=gFirstname>
-                                    </div>
-                                    <div class="col-sm-6">
-                                        <input type="text" class="form-control" placeholder="Last name" name=gLastname>
-                                    </div>
-                                </div>
-                            </form>
-                            <div class="form-group">
-                                <div class="row">
-                                    <div class="col-sm-2">
-                                        <label for="dpSchools">School</label>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-sm-6">
-                                        <select class="form-control" id="schoolname">
-                                            <option value="uic">University of Immaculate Conception</option>
-                                            <option value="jmc">Jose Maria College</option>
-                                            <option value="mcm">Malayan Colleges of Mindanao</option>
-                                            <option value="cjc">Cor Jesu College</option>
-                                            <option value="um">University of Mindanao</option>
-                                        </select>
-                                    </div>
-                                    <div class="col-sm-6">
-                                        <label for="dpSchools">Add New School</label>
-                                        <button type="button" class="btn btn-primary" style="margin-left:1rem;background-color:#5E016D" name="newSchool">Click Me</button>
-                                    </div>
-                                </div> 
-                            </div>
-                            <button type="submit" class="btn btn-primary btn-block" style="margin-top:1rem;background-color:#5E016D" name="submitAttendance">Enter</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
+				<?php
+					echo "<input type='hidden' class='form-control' name='use' value='$currEventId'>";
+					echo "<h3 for='code'>Registration for $currEvent[name] Guest</h3>";
+				?>
+				<button id='toggle'>Returning Guest</button>
+				
+					<!-- RETURNING GUEST -->
+					<div id='returning' class="form-group">
+						<div class="row col-sm-2">
+							<label for="gSearch">Search</label>
+						</div>
+						<div class="row">
+							<div class="col-sm-6">
+								<input type="text" class="form-control" placeholder='Enter name' name=gSearch>
+							</div>
+						</div>
+						<div class="form-group" style='height:50vh; overflow:auto;'>
+							<table class="table table-striped text-left">
+								<thead style='position:sticky; top: 0; background-color:#cdcdcd;'>
+									<th>Lastname</th>
+									<th>Firstname</th>
+									<th>School</th>
+									<th></th>
+								</thead>
+								<?php
+									$guestTable = $conn->query( "SELECT * FROM guests ORDER BY lastname") or die( $conn->error);
+									while($row = $guestTable->fetch_assoc()) {
+										echo "<tr class=tblrow>";
+										echo "<td class=lname>$row[lastname]</td>";
+										echo "<td class=fname>$row[firstname]</td>";
+										echo "<td class=school>$row[school]</td>";
+										echo "<td><button class='checkInButton'>CHECK IN</button></td>";
+										echo "</tr>";
+									}
+								?>
+							</table>
+						</div> 
+					</div>
+					<!-- NEW GUEST -->
+					<div id='newguest' class="form-group">
+						<div class="row">
+							<div class="col-sm-2">
+								<label for="gfullname">Full Name</label>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-sm-6">
+								<input type="text" class="form-control" placeholder="First name" name=gFirstname>
+							</div>
+							<div class="col-sm-6">
+								<input type="text" class="form-control" placeholder="Last name" name=gLastname>
+							</div>
+						</div>
+						<div class="form-group">
+							<div class="row">
+								<div class="col-sm-2">
+									<label for="dpSchools">School</label>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-sm-6">
+									<select class="form-control" id="schoolnameselect">
+										<?php
+											$guestTable = $conn->query( "SELECT DISTINCT school FROM guests ORDER BY school") or die( $conn->error);
+											while($row = $guestTable->fetch_assoc())
+												echo "<option value='$row[school]'>$row[school]</option>";
+										?>
+									</select>
+									<input type='text' class=form-control id='schoolnametext' placeholder='School'>
+								</div>
+								<div class="col-sm-6">
+									<button type="button" class="btn btn-primary" id='toggleSchool' style="margin-left:1rem;background-color:#5E016D">Enter Another School</button>
+								</div>
+							</div> 
+						</div>
+						<input type="hidden" id="use" class="form-control" name="use" value="<?php echo $currEventId ?>" >
+						<button type="submit" class="btn btn-primary btn-block" style="margin-top:1rem;background-color:#5E016D" name="submitAttendance">Enter</button>
+					</div>
+			</div>
         </div>
     </body>
 </html>

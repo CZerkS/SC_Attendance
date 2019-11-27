@@ -2,6 +2,7 @@
 
 include_once 'config.php';
 
+
 if(isset($_POST['save'])){
     $name = $_POST['name'];
     $desc = $_POST['desc'];
@@ -52,10 +53,8 @@ if(isset($_POST['save'])){
     }
     
     $sql = "CREATE TABLE `$guestTablename` (
-    `guestcode` int AUTO_INCREMENT,
-    `firstname` VARCHAR(255) NOT NULL,
-    `lastname` VARCHAR(255) NOT NULL,
-    `school` VARCHAR(255) NOT NULL,
+    `guestcode` INT UNSIGNED AUTO_INCREMENT,
+    `timeIn` DATETIME NOT NULL,
     PRIMARY KEY (`guestcode`)
         ) ENGINE=InnoDB;";
     if( $conn->query( $sql ) === TRUE ){
@@ -66,11 +65,10 @@ if(isset($_POST['save'])){
     
     $_SESSION['message'] = "New event added!";
     $_SESSION['msg_type'] = "Success";
-    header("location: events.php");
+    header("location: index.php");
 }
 
 if( isset($_POST['update'])){
-    echo "Updating";
     $eventid = $_POST['eventid'];
     $eventname = $_POST['vname'];
     $cleanname = preg_replace('/[^A-Za-z0-9\-]/','',str_replace(' ', '', $eventname));
@@ -78,21 +76,20 @@ if( isset($_POST['update'])){
     $guestTablename = $eventid."_guest_".$cleanname;
 
     $desc = $_POST['vdesc'];
-
     $date = DateTime::createFromFormat('m-d-Y', $_POST['vdate'])->format('Y-m-d');
-    
-    $sql = "UPDATE event SET name='$eventname', description='$desc', date='$date', tablename='$tablename', guestTablename='$guestTablename' WHERE eventid='$eventid'";
-    $result = $conn->query($sql) or die($conn->error);
 
-    #$sql = "RENAME  TO "
-    #$result = $conn->query($sql) or die($conn->error);
-    
+    $row = mysqli_fetch_array($conn->query("SELECT * FROM event WHERE eventid=$eventid"));
+
+    $sqlUpdateRow = $conn->query("UPDATE event SET name='$eventname', description='$desc', date='$date', tablename='$tablename', guestTablename='$guestTablename' WHERE eventid=$eventid");
+    $sqlAddTable = $conn->query("ALTER TABLE " . $row['tablename'] . " RENAME TO $tablename");
+    $sqlAddGTable = $conn->query("ALTER TABLE " . $row['guestTablename'] . " RENAME TO $guestTablename");
+
     header("Location: viewEvent.php?view=$eventid");
 }
 
 if(isset($_GET['delete'])){
     $id = $_GET['delete'];
-    $row = mysqli_fetch_array( $conn->query("SELECT * FROM event WHERE eventid=$id") );
+    $row = mysqli_fetch_array($conn->query("SELECT * FROM event WHERE eventid=$id") );
     
     $tablename=$row['tablename'];
     $guestTablename=$row['guestTablename'];
@@ -103,5 +100,24 @@ if(isset($_GET['delete'])){
 
     $_SESSION['message'] = "An event has been deleted!";
     $_SESSION['msg_type'] = "danger";
-    header("location: events.php");
+    header("location: index.php");
+}
+
+if(isset($_POST['changeapi'])){
+    $newapicode = $_POST['new_api_name'];
+    $api_url = "https://winrest01.addu.edu.ph/eventAttendance/InquiryAPI/personQuery?eventcode=$newapicode&barCode=";
+
+    $content = @file_get_contents($api_url);
+
+    if($content){
+        $sql = "UPDATE current_api SET api_code='$newapicode'";
+
+        if($conn->query($sql) === TRUE)
+            echo "<script language='javascript'>alert('API Changed successfully')</script>";
+        else
+            echo "<script language='javascript'>alert('Error:$sql \n $conn->error')</script>";
+    }else
+        $contentnotexist = true;
+    
+    //header("location: index.php");
 }

@@ -21,7 +21,7 @@ and open the template in the editor.
     <body style="font-family:Comic Sans MS">
         <div class="container">
             <div class="col-sm-1">
-                <a href="events.php" class="btn btn_primary"  style="margin-top:1rem; background-color:#5E016D; color: #ffffff">Go Back</a>
+                <a href="index.php" class="btn btn_primary"  style="margin-top:1rem; background-color:#5E016D; color: #ffffff">Go Back</a>
             </div>
         </div>
 
@@ -39,11 +39,18 @@ and open the template in the editor.
                 <div class="row">
                     <form action="registerAdDU.php" method="GET">
                         <div class="form-group">
-                            <input type="hidden" class="form-control" name="use" value="<?php echo $currEventId ?>" >
+                            <input type="hidden" name="use" value="<?php echo $currEventId?>">
                             <h3 for="studentcode">Registration for <?php echo $currEvent['name']?></h3>
-                            <h4>Hi, <?php echo $bottomname?></h4>
+                            <?php
+                                if(isset($firstName))
+                                    echo "<h4>HI, $firstName</h4>";
+                                else if(isset($notenrolled))
+                                    echo "<h4>Student not Enrolled</h4>";
+                                else if(isset($wrongapi)) 
+                                    echo "<h4>Wrong API</h4>";
+                            ?>
                             <input type="text" class="form-control" placeholder="Enter student code" name="studentcode">
-                            <button type="submit" class="btn btn-primary btn-block form-control" style="margin-top:1rem;background-color:#5E016D" name="submitAttendance">Enter</button>
+                            <button type="submit" class="btn btn-primary btn-block form-control" style="margin-top:1rem;background-color:#5E016D">Enter</button>
                         </div>
                     </form>
                 </div>
