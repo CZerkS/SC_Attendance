@@ -11,8 +11,6 @@
     $eventdesc = $currEvent['description'];
     $date = DateTime::createFromFormat('Y-m-d', $currEvent['date'])->format('m-d-Y');
     $eventTable = $conn->query("SELECT * FROM $tname") or die( $conn->error);
-
-    require_once 'processEvent.php';
 ?>
 
 <html lang="en">
@@ -29,6 +27,19 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/css/bootstrap-datepicker3.css"/>
+
+    <!---for JQuery--->
+    <style>
+            #adduSection{}
+
+            #guestSection{}
+
+            #btnAdduSection{}
+
+            #btnGuestSection{}
+
+            #btnEventSection{}
+    </style>
   </head>
   <body>
       <div class="navbar navbar-default navbar-static-top navbar-expand-lg navbar-dark" role="navigation">
@@ -53,10 +64,21 @@
           </div>
       </div>
       <div class="container">
+        <div class="container">
+            <div class="col-sm-1">
+                <a href="index.php" class="btn btn_primary"  style="margin-top:1rem; background-color:#5E016D; color: #ffffff">Go Back</a>
+            </div>
+        </div>
+        <div class="container" style="margin-top: 5rem;">
+                <!--NAVIGATION SECTION--->
+                <div class="btn-group" role="group" aria-label="Basic example">
+                    <button type="button" class="btn btn-primary" id="btnAdduSection">AdDU</button>
+                    <button type="button" class="btn btn-primary" id="btnGuestSection">GUEST</button>
+                </div>
+                <!--STOPS HERE--->
+                <!--ADDU VIEW SECTION--->
                 <div class="row justify-content-center text-center">
-                    <div class="row">
-                        <div class="col-md-9 justify-content-center">
-                            <div class="row justify-content-center">
+                    <div class="col-sm-9" id="adduSection">
                             <table class="table table-striped text-left">
                                 <thead>
                                     <tr>
@@ -79,15 +101,51 @@
                                     </tr>
                                 <?php endwhile; ?>
                             </table>
-                        </div>
                     </div>
                     <div class="col-md-3">
+                        <?php
+                            require_once 'processEvent.php';
+                    <!--STOPS HERE--->
+                    <!--GUEST VIEW SECTION--->
+                    <div class="col-sm-9" id="guestSection">
+                        <table class="table table-striped text-left">
+                            <thead>
+                                <tr>
+                                    <th>Guest Code</th>
+                                    <th>Last Name</th>
+                                    <th>First Name</th>
+                                    <th>School</th>
+                                    <th>Time-in</th>
+                                </tr>
+                            </thead>
+                            <?php
+                                $g_tableName  = $currEvent['guestTablename'];
+                                $query = "SELECT guests.guestcode, lastname, firstname, school, timein FROM $g_tableName
+                                        LEFT JOIN guests ON $g_tableName.guestcode = guests.guestcode
+                                        ORDER BY timein";
+                                $g_eventTable = $conn->query( $query ) or die( $conn->error);
+                                while($row = $g_eventTable->fetch_assoc() ):
+                            ?>
+                                <tr>
+                                    <td><?php echo $row['guestcode'];?></td>
+                                    <td><?php echo $row['lastname'];?></td>
+                                    <td><?php echo $row['firstname'];?></td>
+                                    <td><?php echo $row['school'];?></td>
+                                    <td><?php echo $row['timein'];?></td>
+                                </tr>
+                            <?php endwhile; ?>
+                        </table>
+                    </div>
+                    <!--STOPS HERE--->
+                    <!--EVENT DETAILS SECTION--->
+                    <div class="col-md-3" id="eventSection">
                         <?php
                             require_once 'processEvent.php';
                         ?>
                         <form action="processEvent.php" method="POST">
 
                             <input type="hidden" class="form-control" name="eventid" value="<?php echo $eventid; ?>" >
+                            <h2>Event Details</h2>
                             <div class="form-group">
                                 <label for="name">Event Name</label>
                                 <input type="text" class="form-control" placeholder="Enter event name" name="vname" value="<?php echo $eventname; ?>" >
@@ -101,17 +159,20 @@
                                 <input type ="text" placeholder="MM-DD-YYYY" class="form-control" name="vdate" value="<?php echo $date; ?>">
                             </div>
                             <div class="form-group">
-                                <button type="submit" class="btn btn-info" name="update">Update</button>
+                                <button type="update" class="btn btn-info" name="update">Update</button>
                             </div>
                         </form>
                     </div>
+                    <!--STOPS HERE--->
                 </div>
             </div>
         </div>
     </body>
 
     <!--- Datepicker--->
+
     <script>
+        //Datepicker
         $(document).ready(function(){
             var date_input=$('input[name="date"]');
             var container=$('.bootstrap-iso form').length>0 ? $('.bootstrap-iso form').parent() : "body";
@@ -122,6 +183,20 @@
               autoclose: true,
             })
         })
+
+        //Button Event Handler
+        $(document).ready(function(){
+            $("#guestSection").hide();
+
+            $("#btnAdduSection").click(function(){
+                $("#adduSection").show();
+                $("#guestSection").hide();
+            });
+            $("#btnGuestSection").click(function(){
+                $("#adduSection").hide();
+                $("#guestSection").show();
+            });
+        });
     </script>
 
 </html>
