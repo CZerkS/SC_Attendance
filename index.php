@@ -40,7 +40,7 @@
                         <img src="Images/CS Logo.jpg" height="100" width="100" alt="CS Logo">
                     </div>
                     <div class="col-sm-5">
-                        <h1 style="font-weight:bold">CS Attendance Systems <?php session_start(); echo session_id(); ?></h1>
+                        <h1 style="font-weight:bold">CS Attendance Systems</h1>
                     </div>
                 </div>
                     <?php
@@ -48,6 +48,8 @@
                         $eventTables = $conn->query("SELECT * FROM event") or die( $conn->error);
                         $apikey = $conn->query("SELECT * FROM current_api ORDER BY apiID DESC LIMIT 1;") or die( $conn->error);
                         $row = $apikey->fetch_assoc();
+                        
+                        date_default_timezone_set("Asia/Shanghai");
 
                         if(!date("YYYY-MM-DD hh:mm:ss",time()) > $row['dateEnd'])
                             echo "<h4 align='left'><b>CURRENT API KEY</b>: " . $row['api_code'] . "</h4>";
@@ -74,6 +76,7 @@
                                         <a href="registerGuest.php?use=<?php echo $row['eventid']; ?>" class="btn btn-primary">Guest</a>
                                         <a href="viewEvent.php?view=<?php echo $row['eventid']; ?>" class="btn btn-info">View</a>
                                         <a href="processEvent.php?delete=<?php echo $row['eventid']; ?>" class="btn btn-danger">Delete</a>
+                                        <a href="export.php?export=<?php echo $row['eventid']; ?>" class="btn btn-success">Export</a>
                                     </td>
                                 </tr>
                             <?php endwhile;?>
