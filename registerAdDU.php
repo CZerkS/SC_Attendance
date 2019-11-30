@@ -35,68 +35,25 @@ and open the template in the editor.
                       <li class="nav-item">
                           <a class="nav-link" href="index.php">Home</a>
                       </li>
-                      <li class="nav-item">
-                          <a class="nav-link" href="events.php">Event Manager</a>
-                      </li>
                   </ul>
               </div>
           </div>
       </div>
-      <!--
-        <div class="container">
-          <h1>Registration for AdDU Students</h1>
-            <div class="col-sm-1">
-                <a href="index.php" class="btn btn_primary"  style="margin-top:1rem; background-color:#5E016D; color: #ffffff">Go Back</a>
-            </div>
-        </div>
 
-        <div class="container" style="margin-top: 5rem">
-            <div class="col-sm-1">
-                <img src="Images/CS Logo.jpg" class="img-responsive" height="75" width="75" alt="CS Logo">
-            </div>
-            <div class="col-sm-9">
-                <h2>Computer Studies Registration System</h2>
-            </div>
-        </div>
-
-        <div class="container" style="margin-top: 2rem">
-            <div class="jumbotron">
-                <div class="row">
-                    <form action="registerAdDU.php" method="GET">
-                        <div class="form-group">
-                            <input type="hidden" class="form-control" name="use" value="<?php echo $currEventId ?>" >
-                            <h2 for="studentcode">Registration for <?php echo $currEvent['name']?></h2>
-                            <input type="hidden" name="use" value="<?php echo $currEventId?>">
-                            <h3 for="studentcode">Registration for <?php echo $currEvent['name']?></h3>
-                            <?php
-                                if(isset($firstName))
-                                    echo "<h4>HI, $firstName</h4>";
-                                else if(isset($notenrolled))
-                                    echo "<h4>Student not Enrolled</h4>";
-                                else if(isset($wrongapi))
-                                    echo "<h4>Wrong API</h4>";
-                            ?>
-                            <input type="text" class="form-control" placeholder="Enter student code" name="studentcode">
-                            <button type="submit" class="btn btn-primary btn-block form-control" style="margin-top:1rem;background-color:#5E016D">Enter</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-      -->
     <div class="container">
       <div class="row">
-        <h1 class="mt-3">AdDU Attendance</h1>
+
       </div>
     </div>
         <div class="container">
+          <h1 class="mt-5">AdDU-CSSEC Attendance Systems</h1>
           <form action="registerAdDU.php" method="GET">
             <div class="form-group">
               <input type="hidden" class="form-control" name="use" value="<?php echo $currEventId ?>" >
               <h2 for="studentcode">Registration for <?php echo $currEvent['name']?></h2>
               <p>Student Code:</p>
               <input type="text" class="form-control form-control-lg mb-4" placeholder="Enter student code" name="studentcode">
-              <button type="submit" class="btn btn-primary btn-lg btn-block" name="submitAttendance">Enter</button>
+              <button type="submit" class="btn btn-primary btn-lg btn-block violet" name="submitAttendance">Enter</button>
             </div>
           </form>
         </div>

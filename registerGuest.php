@@ -34,30 +34,13 @@ and open the template in the editor.
                     <li class="nav-item">
                         <a class="nav-link" href="index.php">Home</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="events.php">Event Manager</a>
-                    </li>
                 </ul>
             </div>
         </div>
     </div>
     <body>
-        <div class="container">
-            <div class="col-sm-1">
-                <a href="events.php" class="btn btn_primary"  style="margin-top:1rem; background-color:#5E016D; color: #ffffff">Go Back</a>
-            </div>
-        </div>
 
-        <div class="container" style="margin-top: 5rem">
-            <div class="col-sm-1">
-                <img src="Images/CS Logo.jpg" class="img-responsive" height="75" width="75" alt="CS Logo">
-            </div>
-            <div class="col-sm-9">
-                <h2>CS Registration System (Guest)</h2>
-            </div>
-        </div>
-
-        <div class="container" style="margin-top: 2rem">
+        <div class="container mt-5">
             <div class="jumbotron">
                 <div class="row">
                     <form action="registerGuest.php" method="GET">
@@ -65,11 +48,6 @@ and open the template in the editor.
                             <input type="hidden" class="form-control" name="use" value="<?php echo $currEventId ?>" >
                             <h3 for="code">Registration for <?php echo $currEvent['name']?> Guest</h3>
                             <form>
-                                <div class="row">
-                                    <div class="col-sm-2">
-                                        <label for="gfullname">Full Name</label>
-                                    </div>
-                                </div>
                                 <div class="row">
                                     <div class="col-sm-6">
                                         <input type="text" class="form-control" placeholder="First name" name=gFirstname>
@@ -97,11 +75,11 @@ and open the template in the editor.
                                     </div>
                                     <div class="col-sm-6">
                                         <label for="dpSchools">Add New School</label>
-                                        <button type="button" class="btn btn-primary" style="margin-left:1rem;background-color:#5E016D" name="newSchool">Click Me</button>
+                                        <button type="button" class="btn btn-primary" name="newSchool">Click Me</button>
                                     </div>
                                 </div>
                             </div>
-                            <button type="submit" class="btn btn-primary btn-block" style="margin-top:1rem;background-color:#5E016D" name="submitAttendance">Enter</button>
+                            <button type="submit" class="btn btn-primary btn-block" name="submitAttendance">Enter</button>
                         </div>
                     </form>
                 </div>

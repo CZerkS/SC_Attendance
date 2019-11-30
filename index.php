@@ -11,8 +11,12 @@
         <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-        <link rel="stylesheet" href="css/custom.css"/>
+        <link rel="stylesheet" href="css/custom.css">
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js"></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/css/bootstrap-datepicker3.css"/>
+        <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.css">
+        <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.js"></script>
     </head>
     <body>
       <div class="navbar navbar-default navbar-static-top navbar-expand-lg navbar-dark" role="navigation">
@@ -33,52 +37,16 @@
               </div>
           </div>
       </div>
-        <div class="container">
-            <div class="row">
-              <div class="mx-auto mt-5">
-                <form action="events.php" method="GET">
-                    <div class="form-group">
-                        <h1>Please enter the event code</h1>
-                        <input type="text" class="form-control" placeholder="Event code" name="eventcode" >
-                    </div>
-                </form>
-              </div>
-        <title>Events</title>
-        <script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha384-nvAa0+6Qg9clwYCGGPpDQLVpLNn0fRaROjHqs13t4Ggj3Ez50XnGQqc/r8MhnRDZ" crossorigin="anonymous"></script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd" crossorigin="anonymous"></script>
-        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js"></script>
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/css/bootstrap-datepicker3.css"/>
-        <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
-
-        <style>
-            #apiText{}
-
-            #apiEnter{}
-
-            #apiButton{}
-
-            #apiSection{}
-
-            #eventButton{}
-
-            #eventSection{}
-
-            #buttonhideae{}
-        </style>
     </head>
     <body>
       <div class="container">
-        <div class="row justify-content-center text-center">
+        <script>
+          $(document).ready( function () {
+              $('#table_id').DataTable();
+          } );
+        </script>
             <div class="row">
-                <div class="col-md-9 justify-content-center">
-                <div class="container" style="margin-top: 5rem">
-                    <div class="col-sm-1">
-                        <img src="Images/CS Logo.jpg" height="100" width="100" alt="CS Logo">
-                    </div>
-                    <div class="col-sm-5">
-                        <h1 style="font-weight:bold">CS Attendance Systems</h1>
-                    </div>
-                </div>
+                <div class="col-md-9 mt-5">
                     <?php
                         include_once 'config.php';
                         $eventTables = $conn->query("SELECT * FROM event") or die( $conn->error);
@@ -92,47 +60,46 @@
                         else
                             echo "<h4 align='left'><b>CURRENT API KEY</b>: No API Key yet</h4>"
                     ?>
-                    <div class="row justify-content-center" style="margin-top:1rem">
-                        <table class="table table-striped text-left">
-                            <thead>
-                                <tr>
-                                    <th>Name</th>
-                                    <th>Description</th>
-                                    <th>Date</th>
-                                    <th colspan="3">Actions</th>
-                                </tr>
-                            </thead>
-                            <?php while($row = $eventTables->fetch_assoc()): ?>
-                                <tr>
-                                    <td><?php echo $row['name'];?></td>
-                                    <td><?php echo $row['description'];?></td>
-                                    <td><?php echo $row['date'];?></td>
-                                    <td>
-                                        <a href="registerAdDU.php?use=<?php echo $row['eventid']; ?>" class="btn btn-primary">AdDU</a>
-                                        <a href="registerGuest.php?use=<?php echo $row['eventid']; ?>" class="btn btn-primary">Guest</a>
-                                        <a href="viewEvent.php?view=<?php echo $row['eventid']; ?>" class="btn btn-info">View</a>
-                                        <a href="processEvent.php?delete=<?php echo $row['eventid']; ?>" class="btn btn-danger">Delete</a>
-                                        <a href="export.php?export=<?php echo $row['eventid']; ?>" class="btn btn-success">Export</a>
-                                    </td>
-                                </tr>
-                            <?php endwhile;?>
-                        </table>
-                    </div>
+                      <table id="table_id" class="display">
+                          <thead>
+                              <tr>
+                                  <th>Name</th>
+                                  <th>Description</th>
+                                  <th>Date</th>
+                                  <th>Actions</th>
+                              </tr>
+                          </thead>
+                          <tbody>
+                          <?php while($row = $eventTables->fetch_assoc()): ?>
+                              <tr>
+                                  <td><?php echo $row['name'];?></td>
+                                  <td><?php echo $row['description'];?></td>
+                                  <td><?php echo $row['date'];?></td>
+                                  <td>
+                                      <a href="registerAdDU.php?use=<?php echo $row['eventid']; ?>" class="btn btn-primary violet">AdDU</a>
+                                      <a href="registerGuest.php?use=<?php echo $row['eventid']; ?>" class="btn btn-primary violet">Guest</a>
+                                      <a href="viewEvent.php?view=<?php echo $row['eventid']; ?>" class="btn btn-info violet">View</a>
+                                      <a href="processEvent.php?delete=<?php echo $row['eventid']; ?>" class="btn btn-danger">Delete</a>
+                                  </td>
+                              </tr>
+                          </tbody>
+                          <?php endwhile;?>
+                      </table>
                 </div>
-                <div class="col-md-3" style="margin-top:6rem">
+                <div class="col-md-3 mt-5">
                     <?php
                         require_once 'processEvent.php';
                     ?>
 
                     <div class="btn-group" role="group">
-                        <button type="button" class="btn btn-primary" id="apiButton">API</button>
-                        <button type="button" class="btn btn-primary" id="eventButton">EVENT</button>
-                        <button type="button" class="btn btn-primary" id="buttonhideae">HIDE</button>
+                        <button type="button" class="btn btn-primary violet" id="apiButton">API</button>
+                        <button type="button" class="btn btn-primary violet" id="eventButton">EVENT</button>
+                        <button type="button" class="btn btn-primary violet" id="buttonhideae">HIDE</button>
                     </div>
 
                     <form action="index.php" method="POST" id="apiSection">
                         <div class="form-group">
-                            <h3 style="font-weight:bold">CHANGE API</h3>
+                            <h3 class="py-3">CHANGE API</h3>
                             <!--Placing of "API does not exist"-->
                             <?php
                                 if(isset($contentnotexist))
@@ -143,13 +110,13 @@
                             <input class="form-control" name="date" placeholder="MM-DD-YYYY" type ="text"/>
                         </div>
                         <div class="form-group">
-                            <button type="submit" class="btn btn-primary" name="changeapi">Change</button>
+                            <button type="submit" class="btn btn-primary violet" name="changeapi">Change</button>
                         </div>
                     </form>
 
                     <form action="processEvent.php" method="POST" id="eventSection">
                         <div class="form-group">
-                            <h3 style="font-weight:bold">ADD EVENT</h3>
+                            <h3>ADD EVENT</h3>
                         </div>
                         <div class="form-group">
                             <label for="name">Event Name</label>
@@ -166,12 +133,11 @@
                             <input class="form-control" name="date" placeholder="MM-DD-YYYY" type ="text"/>
                         </div>
                         <div class="form-group">
-                            <button type="submit" class="btn btn-primary" name="save">Save</button>
+                            <button type="submit" class="btn btn-primary violet" name="save">Save</button>
                         </div>
                     </form>
                 </div>
             </div>
-        </div>
       </div>
     </body>
 
