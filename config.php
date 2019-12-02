@@ -12,7 +12,7 @@
     $dbhost="localhost";
     $dbuser="root";
     $dbpass="";
-    $dbname="testdb";
+    $dbname="test";
 
     $conn = mysqli_connect($dbhost,$dbuser,$dbpass);
     mysqli_select_db($conn, $dbname);

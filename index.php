@@ -37,54 +37,57 @@
               </div>
           </div>
       </div>
-    </head>
-    <body>
+
       <div class="container">
         <script>
           $(document).ready( function () {
               $('#table_id').DataTable();
           } );
         </script>
+
             <div class="row">
                 <div class="col-md-9 mt-5">
                     <?php
                         include_once 'config.php';
-                        $eventTables = $conn->query("SELECT * FROM event") or die( $conn->error);
-                        $apikey = $conn->query("SELECT * FROM current_api ORDER BY apiID DESC LIMIT 1;") or die( $conn->error);
-                        $row = $apikey->fetch_assoc();
+
+                        $eventTables = $conn->query("SELECT * FROM test.event") or die( $conn->error);
+                        $apikey = $conn->query("SELECT * FROM test.current_api ORDER BY apiID DESC LIMIT 1;") or die( $conn->error);
+                        $apirow = $apikey->fetch_assoc();
 
                         date_default_timezone_set("Asia/Shanghai");
 
-                        if(!date("YYYY-MM-DD hh:mm:ss",time()) > $row['dateEnd'])
-                            echo "<h4 align='left'><b>CURRENT API KEY</b>: " . $row['api_code'] . "</h4>";
+                        if(date("m-d-Y",time()) < $apirow['dateEnd'])
+                            echo "<h4 align='left'><b>CURRENT API KEY</b>: " . $apirow['api_code'] . "</h4>";
                         else
                             echo "<h4 align='left'><b>CURRENT API KEY</b>: No API Key yet</h4>"
                     ?>
-                      <table id="table_id" class="display">
-                          <thead>
-                              <tr>
-                                  <th>Name</th>
-                                  <th>Description</th>
-                                  <th>Date</th>
-                                  <th>Actions</th>
-                              </tr>
-                          </thead>
-                          <tbody>
-                          <?php while($row = $eventTables->fetch_assoc()): ?>
-                              <tr>
-                                  <td><?php echo $row['name'];?></td>
-                                  <td><?php echo $row['description'];?></td>
-                                  <td><?php echo $row['date'];?></td>
-                                  <td>
-                                      <a href="registerAdDU.php?use=<?php echo $row['eventid']; ?>" class="btn btn-primary violet">AdDU</a>
-                                      <a href="registerGuest.php?use=<?php echo $row['eventid']; ?>" class="btn btn-primary violet">Guest</a>
-                                      <a href="viewEvent.php?view=<?php echo $row['eventid']; ?>" class="btn btn-info violet">View</a>
-                                      <a href="processEvent.php?delete=<?php echo $row['eventid']; ?>" class="btn btn-danger">Delete</a>
-                                  </td>
-                              </tr>
-                          </tbody>
-                          <?php endwhile;?>
-                      </table>
+                    
+                    <table id="table_id" class="display">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Description</th>
+                                <th>Date</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        <?php while($row = $eventTables->fetch_assoc()): ?>
+                            <tr>
+                                <td><?php echo $row['name'];?></td>
+                                <td><?php echo $row['description'];?></td>
+                                <td><?php echo $row['date'];?></td>
+                                <td>
+                                    <a href="registerAdDU.php?use=<?php echo $row['eventid']; ?>" class="btn btn-primary violet">AdDU</a>
+                                    <a href="registerGuest.php?use=<?php echo $row['eventid']; ?>" class="btn btn-primary violet">Guest</a>
+                                    <a href="viewEvent.php?view=<?php echo $row['eventid']; ?>" class="btn btn-info violet">View</a>
+                                    <a href="processEvent.php?delete=<?php echo $row['eventid']; ?>" class="btn btn-danger">Delete</a>
+                                    <a href="export.php?export=<?php echo $row['eventid']; ?>" class="btn btn-success">Export</a>
+                                </td>
+                            </tr>
+                        </tbody>
+                        <?php endwhile;?>
+                    </table>
                 </div>
                 <div class="col-md-3 mt-5">
                     <?php
@@ -99,11 +102,11 @@
 
                     <form action="index.php" method="POST" id="apiSection">
                         <div class="form-group">
-                            <h3 class="py-3">CHANGE API</h3>
+                            <h3 class="py-3">NEW API</h3>
                             <!--Placing of "API does not exist"-->
                             <?php
                                 if(isset($contentnotexist))
-                                    echo "<h3>API Key doesn't exist</h3>";
+                                    echo "<h4>API Key doesn't exist</h4>";
                             ?>
                             <input type="text" class="form-control" placeholder="Enter new API" name="new_api_name">
                             <label for="date">Date Finished</label>

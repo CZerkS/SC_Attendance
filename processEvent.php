@@ -10,7 +10,7 @@ if(isset($_POST['save'])){
     $tablename ="placeholder";
     $guestTablename ="guestplaceholder";
     
-    $sql = "INSERT INTO event(name, description, date, tablename , guestTablename) VALUES('$name', '$desc', '$date', '$tablename', '$guestTablename')";
+    $sql = "INSERT INTO test.event(name, description, date, tablename , guestTablename) VALUES('$name', '$desc', '$date', '$tablename', '$guestTablename')";
     if($conn->query($sql) === TRUE){
         echo "New record created successfully";
     } else{
@@ -22,27 +22,28 @@ if(isset($_POST['save'])){
     $tablename = $lastid."_addu_".$cleanname;
     $guestTablename = $lastid."_guest_".$cleanname;
 
-    $sql = "UPDATE event SET tablename='$tablename' WHERE eventid=$lastid";
+    $sql = "UPDATE test.event SET tablename='$tablename' WHERE eventid=$lastid";
     if( $conn->query( $sql ) === TRUE ){
         echo "Record updated successfully";
     } else{
         echo "Error: " . $sql . "<br>" . $conn->error;
     }
 
-    $sql = "UPDATE event SET guestTablename='$guestTablename' WHERE eventid=$lastid";
+    $sql = "UPDATE test.event SET guestTablename='$guestTablename' WHERE eventid=$lastid";
     if($conn->query($sql) === TRUE){
         echo "alert('Record updated successfully')";
     } else{
         echo "Error: " . $sql . "<br>" . $conn->error;
     }
 
-    $sql = "CREATE TABLE `$tablename` (
+    $sql = "CREATE TABLE test.`$tablename` (
 	`StudentID` VARCHAR(255),
 	`Firstname` VARCHAR(255) NOT NULL,
 	`Lastname` VARCHAR(255) NOT NULL,
 	`Course` VARCHAR(255) NOT NULL,
 	`Section` VARCHAR(255) NOT NULL,
 	`TimeIn` DATETIME NOT NULL,
+    `TimeOut` DATETIME NOT NULL,
 	PRIMARY KEY (`StudentID`)
         ) ENGINE=InnoDB;";
 
@@ -52,7 +53,7 @@ if(isset($_POST['save'])){
         echo "Error: ' . $sql . '<br>' . $conn->error";
     }
     
-    $sql = "CREATE TABLE `$guestTablename` (
+    $sql = "CREATE TABLE test.`$guestTablename` (
     `guestcode` INT UNSIGNED AUTO_INCREMENT,
     `timeIn` DATETIME NOT NULL,
     PRIMARY KEY (`guestcode`)
@@ -78,25 +79,25 @@ if( isset($_POST['update'])){
     $desc = $_POST['vdesc'];
     $date = DateTime::createFromFormat('m-d-Y', $_POST['vdate'])->format('Y-m-d');
 
-    $row = mysqli_fetch_array($conn->query("SELECT * FROM event WHERE eventid=$eventid"));
+    $row = mysqli_fetch_array($conn->query("SELECT * FROM test.event WHERE eventid=$eventid"));
 
-    $sqlUpdateRow = $conn->query("UPDATE event SET name='$eventname', description='$desc', date='$date', tablename='$tablename', guestTablename='$guestTablename' WHERE eventid=$eventid");
-    $sqlAddTable = $conn->query("ALTER TABLE " . $row['tablename'] . " RENAME TO $tablename");
-    $sqlAddGTable = $conn->query("ALTER TABLE " . $row['guestTablename'] . " RENAME TO $guestTablename");
+    $sqlUpdateRow = $conn->query("UPDATE test.event SET name='$eventname', description='$desc', date='$date', tablename='$tablename', guestTablename='$guestTablename' WHERE eventid=$eventid");
+    $sqlAddTable = $conn->query("ALTER TABLE test." . $row['tablename'] . " RENAME TO $tablename");
+    $sqlAddGTable = $conn->query("ALTER TABLE test." . $row['guestTablename'] . " RENAME TO $guestTablename");
 
     header("Location: viewEvent.php?view=$eventid");
 }
 
 if(isset($_GET['delete'])){
     $id = $_GET['delete'];
-    $row = mysqli_fetch_array($conn->query("SELECT * FROM event WHERE eventid=$id") );
+    $row = mysqli_fetch_array($conn->query("SELECT * FROM test.event WHERE eventid=$id") );
     
     $tablename=$row['tablename'];
     $guestTablename=$row['guestTablename'];
     
-    $conn->query("DELETE FROM event WHERE eventid=$id") or die($conn->error);
-    $conn->query("DROP TABLE IF EXISTS $tablename") or die($conn->error);
-    $conn->query("DROP TABLE IF EXISTS $guestTablename") or die($conn->error);
+    $conn->query("DELETE FROM test.event WHERE eventid=$id") or die($conn->error);
+    $conn->query("DROP TABLE IF EXISTS test.$tablename") or die($conn->error);
+    $conn->query("DROP TABLE IF EXISTS test.$guestTablename") or die($conn->error);
 
     $_SESSION['message'] = "An event has been deleted!";
     $_SESSION['msg_type'] = "danger";
@@ -110,7 +111,7 @@ if(isset($_POST['changeapi'])){
     $content = @file_get_contents($api_url);
 
     if($content){
-        $sql = "UPDATE current_api SET api_code='$newapicode'";
+        $sql = "UPDATE test.current_api SET api_code='$newapicode'";
 
         if($conn->query($sql) === TRUE)
             echo "<script language='javascript'>alert('API Changed successfully')</script>";

@@ -5,12 +5,12 @@
     date_default_timezone_set("Asia/Shanghai");
     include_once 'config.php';
     $eventid = $_GET['view'];
-    $currEvent = mysqli_fetch_array($conn->query("SELECT * FROM event WHERE eventid=$eventid"));
+    $currEvent = mysqli_fetch_array($conn->query("SELECT * FROM test.event WHERE eventid=$eventid"));
     $tname  = $currEvent['tablename'];
     $eventname = $currEvent['name'];
     $eventdesc = $currEvent['description'];
     $date = DateTime::createFromFormat('Y-m-d', $currEvent['date'])->format('m-d-Y');
-    $eventTable = $conn->query("SELECT * FROM $tname") or die( $conn->error);
+    $eventTable = $conn->query("SELECT * FROM test.$tname") or die( $conn->error);
 ?>
 
 <html lang="en">
@@ -68,6 +68,7 @@
                                         <th>Course</th>
                                         <th>Section</th>
                                         <th>Time-in</th>
+                                        <th>Time-out</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -79,6 +80,7 @@
                                           <td><?php echo $row['Course'];?></td>
                                           <td><?php echo $row['Section'];?></td>
                                           <td><?php echo $row['TimeIn'];?></td>
+                                          <td><?php echo $row['TimeOut'];?></td>
                                       </tr>
                                   <?php endwhile; ?>
                               </tbody>
@@ -101,8 +103,8 @@
                             <tbody>
                               <?php
                                   $g_tableName  = $currEvent['guestTablename'];
-                                  $query = "SELECT guests.guestcode, lastname, firstname, school, timein FROM $g_tableName
-                                          LEFT JOIN guests ON $g_tableName.guestcode = guests.guestcode
+                                  $query = "SELECT guests.guestcode, lastname, firstname, school, timein FROM test.$g_tableName
+                                          LEFT JOIN test.guests ON test.$g_tableName.guestcode = test.guests.guestcode
                                           ORDER BY timein";
                                   $g_eventTable = $conn->query( $query ) or die( $conn->error);
                                   while($row = $g_eventTable->fetch_assoc() ):

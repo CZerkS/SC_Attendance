@@ -3,7 +3,7 @@
     
     if( isset($_GET['use'] ) ){
         $currEventId = $_GET['use'];
-        $currEvent = mysqli_fetch_array( $conn->query("SELECT * FROM event WHERE eventid=$currEventId") );
+        $currEvent = mysqli_fetch_array( $conn->query("SELECT * FROM test.event WHERE eventid=$currEventId") );
         $eventTable = $currEvent['guestTablename'];
     }
     
@@ -16,11 +16,11 @@
 
 			// insert to database
 			if (!isset($_GET['returning'])) {
-				$query = "INSERT INTO guests(firstname, lastname, school) VALUES('$firstName', '$lastName', '$school')";
+				$query = "INSERT INTO test.guests(firstname, lastname, school) VALUES('$firstName', '$lastName', '$school')";
 				$result = $conn->query( $query ) or die( $conn-> error );
 			}
 			
-			$query = "INSERT INTO $eventTable VALUES((SELECT guestcode FROM guests WHERE firstname='$firstName' AND lastname='$lastName' AND school='$school'), now())";
+			$query = "INSERT INTO $eventTable VALUES((SELECT guestcode FROM test.guests WHERE firstname='$firstName' AND lastname='$lastName' AND school='$school'), now())";
 			$result = $conn->query( $query ) or die( $conn-> error );
 	
 			echo "$firstName $lastName recorded!";

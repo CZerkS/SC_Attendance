@@ -40,22 +40,65 @@ and open the template in the editor.
           </div>
       </div>
 
-    <div class="container">
-      <div class="row">
+      <div class="container">
+        <h1 class="mt-5">AdDU-CSSEC Attendance Systems</h1>
+        <form action="registerAdDU.php" method="GET">
+          <div class="form-group">
+            <input type="hidden" class="form-control" name="use" value="<?php echo $currEventId ?>" >
+            <h2 for="studentcode">Registration for <?php echo $currEvent['name']?></h2>
 
-      </div>
-    </div>
-        <div class="container">
-          <h1 class="mt-5">AdDU-CSSEC Attendance Systems</h1>
-          <form action="registerAdDU.php" method="GET">
-            <div class="form-group">
-              <input type="hidden" class="form-control" name="use" value="<?php echo $currEventId ?>" >
-              <h2 for="studentcode">Registration for <?php echo $currEvent['name']?></h2>
+            <div class="btn-group" role="group">
+                <button type="button" class="btn btn-primary violet" id="loginButton">Log-In</button>
+                <button type="button" class="btn btn-primary violet" id="logoutButton">Log-Out</button>
+            </div>
+
+            <div class="container" id="loginSection">
+              <h3>LOG-IN</h3>
+              <?php
+                  if(isset($firstName))
+                      echo "<h4>HI, $firstName</h4>";
+                  else if(isset($notenrolled))
+                      echo "<h4>Student not Enrolled</h4>";
+                  else if(isset($wrongapi)) 
+                      echo "<h4>Wrong API</h4>";
+              ?>
               <p>Student Code:</p>
-              <input type="text" class="form-control form-control-lg mb-4" placeholder="Enter student code" name="studentcode">
+              <input type="text" class="form-control form-control-lg mb-4" placeholder="Enter student code" maxLength="15" name="studentcode" autofocus>
               <button type="submit" class="btn btn-primary btn-lg btn-block violet" name="submitAttendance">Enter</button>
             </div>
-          </form>
-        </div>
-    </body>
+
+            <div class="container" id="logoutSection">
+              <h3>LOG-OUT</h3>
+              <?php
+                  if(isset($logout_firstName))
+                      echo "<h4>GOODBYE, $firstName</h4>";
+                  else if(isset($logout_notenrolled))
+                      echo "<h4>Student not Enrolled</h4>";
+                  else if(isset($logout_wrongapi)) 
+                      echo "<h4>Wrong API</h4>";
+              ?>
+              <p>Student Code:</p>
+              <input type="text" class="form-control form-control-lg mb-4" placeholder="Enter student code" maxLength="15" name="logout_studentcode" autofocus>
+              <button type="submit" class="btn btn-primary btn-lg btn-block violet" name="logoutAttendance">Enter</button>
+            </div>
+          </div>
+        </form>
+      </div>
+
+    <script>
+        $(document).ready(function(){
+            // Button Event Handler
+            $("#logoutSection").hide();
+
+            $("#logoutButton").click(function(){
+                $("#logoutSection").show();
+                $("#loginSection").hide();
+            });
+            $("#loginButton").click(function(){
+                $("#logoutSection").hide();
+                $("#loginSection").show();
+            });
+        })
+
+    </script>
 </html>
